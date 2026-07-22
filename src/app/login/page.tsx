@@ -3,17 +3,19 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, VectorSquare, Workflow } from "lucide-react";
+import { ArrowRight, Layers, ScanLine } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { BuiltBy } from "@/components/layout/built-by";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function LoginPage() {
   const router = useRouter();
   const { isAuthenticated, signIn } = useAuthStore();
-  const [email, setEmail] = useState("ava@acme-footwear.com");
+  const [email, setEmail] = useState("ava@studio.example");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -34,20 +36,11 @@ export default function LoginPage() {
         <ThemeToggle />
       </div>
 
-      <section className="relative hidden overflow-hidden border-r border-border lg:flex">
-        <div className="absolute inset-0 grid-dots" />
-        <div className="absolute inset-0 bg-linear-to-br from-emerald-500/20 via-transparent to-cyan-500/10" />
+      <section className="relative hidden overflow-hidden border-r border-border bg-card lg:flex">
+        <div className="absolute inset-0 grid-dots opacity-60" />
         <div className="relative z-10 flex flex-col justify-between p-12">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/20 text-primary ring-1 ring-primary/40">
-              <VectorSquare className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-display text-xl font-semibold">VectorPath AI</p>
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Enterprise Studio
-              </p>
-            </div>
+            <BrandLogo size={52} withWordmark wordmarkClassName="[&_p:first-child]:text-xl" />
           </div>
 
           <div className="max-w-lg space-y-6">
@@ -57,7 +50,7 @@ export default function LoginPage() {
               transition={{ duration: 0.5 }}
               className="font-display text-5xl font-semibold leading-[1.05] tracking-tight"
             >
-              Precision vectors from every cleat scan.
+              Trace any image into precise SVG layers.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -65,8 +58,8 @@ export default function LoginPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-lg text-muted-foreground"
             >
-              Isolate silhouettes, brand marks, and panel breaks into editable SVG layers ready for
-              manufacturing and game pipelines.
+              Turn photos, sketches, logos, and icons into editable vector paths for design, print,
+              and production.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -75,12 +68,12 @@ export default function LoginPage() {
               className="grid gap-3"
             >
               {[
-                { icon: Workflow, text: "Geometry + detail extraction modes" },
-                { icon: ShieldCheck, text: "Workspace-ready for enterprise teams" },
+                { icon: ScanLine, text: "Geometry + detail extraction modes" },
+                { icon: Layers, text: "Layered exports for design & CAD" },
               ].map((item) => (
                 <div
                   key={item.text}
-                  className="flex items-center gap-3 rounded-xl border border-border/70 bg-card/50 px-4 py-3 backdrop-blur"
+                  className="flex items-center gap-3 rounded-md border border-border bg-background/60 px-4 py-3"
                 >
                   <item.icon className="h-4 w-4 text-primary" />
                   <span className="text-sm">{item.text}</span>
@@ -89,9 +82,7 @@ export default function LoginPage() {
             </motion.div>
           </div>
 
-          <p className="text-xs text-muted-foreground">
-            Demo auth — swap in Clerk or NextAuth for production SSO.
-          </p>
+          <BuiltBy showLogo />
         </div>
       </section>
 
@@ -102,16 +93,13 @@ export default function LoginPage() {
           className="w-full max-w-md space-y-8"
         >
           <div className="space-y-2 lg:hidden">
-            <div className="flex items-center gap-2 text-primary">
-              <VectorSquare className="h-5 w-5" />
-              <span className="font-display text-lg font-semibold text-foreground">VectorPath AI</span>
-            </div>
+            <BrandLogo size={36} withWordmark />
           </div>
 
           <div>
             <h2 className="font-display text-3xl font-semibold tracking-tight">Welcome back</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Sign in to your footwear vectorization workspace.
+              Sign in to your image-to-vector workspace.
             </p>
           </div>
 
@@ -129,7 +117,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" defaultValue="vectorpath-demo" required />
+              <Input id="password" type="password" defaultValue="rasm-demo" required />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in…" : "Continue to workspace"}
@@ -137,9 +125,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-xs text-muted-foreground">
-            By continuing you agree to enterprise workspace policies.
-          </p>
+          <BuiltBy align="center" showLogo />
         </motion.div>
       </section>
     </div>

@@ -12,13 +12,13 @@ export function EmptyState() {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/40 px-6 py-16 text-center"
     >
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/25">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-md border border-border bg-muted text-primary">
         <UploadCloud className="h-6 w-6" />
       </div>
       <h3 className="font-display text-xl font-semibold">No projects yet</h3>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
-        Drop your first cleat image to begin. VectorPath will isolate silhouettes, brand marks, and
-        construction details into editable SVG layers.
+        Drop your first image to begin. Rasm will isolate silhouettes and details into editable
+        SVG layers.
       </p>
       <Button asChild className="mt-6">
         <Link href="/studio">Open Studio</Link>

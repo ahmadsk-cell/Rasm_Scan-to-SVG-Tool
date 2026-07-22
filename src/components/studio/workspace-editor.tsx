@@ -10,13 +10,14 @@ import { ExportModal } from "@/components/studio/export-modal";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 
 export function WorkspaceEditor({ project }: { project: Project }) {
-  const { setLayers, setTuning, setActiveProjectId, layers } = useStudioStore();
+  const { setLayers, setTuning, setActiveProjectId, layers, setCanvasSize } = useStudioStore();
 
   useEffect(() => {
     setActiveProjectId(project.id);
     setLayers(project.layers);
     setTuning(project.tuning);
-  }, [project, setActiveProjectId, setLayers, setTuning]);
+    setCanvasSize(project.width ?? 480, project.height ?? 320);
+  }, [project, setActiveProjectId, setLayers, setTuning, setCanvasSize]);
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-6 sm:px-6 lg:px-8">
@@ -30,13 +31,18 @@ export function WorkspaceEditor({ project }: { project: Project }) {
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Interactive vector workspace · {layers.length} editable layers
+            {project.intent ? ` · “${project.intent}”` : ""}
           </p>
         </div>
-        <ExportModal />
+        <ExportModal width={project.width} height={project.height} />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_280px]">
-        <SplitView imageUrl={project.imageUrl} />
+        <SplitView
+          imageUrl={project.imageUrl}
+          width={project.width}
+          height={project.height}
+        />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1 xl:content-start">
           <div className="min-h-[320px]">
             <LayerPanel />

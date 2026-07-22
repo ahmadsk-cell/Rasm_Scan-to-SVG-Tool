@@ -4,42 +4,51 @@ import { useStudioStore } from "@/store/studio-store";
 import { applyTuning, buildSvgFromLayers } from "@/lib/vector-engine";
 import { Slider } from "@/components/ui/slider";
 
-export function SplitView({ imageUrl }: { imageUrl?: string }) {
+export function SplitView({
+  imageUrl,
+  width = 480,
+  height = 320,
+}: {
+  imageUrl?: string;
+  width?: number;
+  height?: number;
+}) {
   const { layers, tuning, comparePosition, setComparePosition } = useStudioStore();
   const tunedLayers = applyTuning(layers, tuning);
-  const svg = buildSvgFromLayers(tunedLayers);
+  const svg = buildSvgFromLayers(tunedLayers, width, height);
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-[3/2] overflow-hidden rounded-2xl border border-border bg-muted/30 grid-dots">
-        <div className="absolute inset-0">
+      <div className="relative aspect-[3/2] overflow-hidden rounded-xl border border-border bg-muted/30 grid-dots">
+        <div className="absolute inset-0 flex items-center justify-center p-2">
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="Original raster" className="h-full w-full object-contain" />
+            <img
+              src={imageUrl}
+              alt="Original raster"
+              className="max-h-full max-w-full object-contain"
+            />
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              Original raster preview
-            </div>
+            <div className="text-sm text-muted-foreground">Original raster preview</div>
           )}
         </div>
 
         <div
-          className="absolute inset-0 overflow-hidden bg-background/90 backdrop-blur-[1px]"
+          className="absolute inset-0 overflow-hidden bg-background/92"
           style={{ clipPath: `inset(0 0 0 ${comparePosition}%)` }}
         >
-          <div
-            className="h-full w-full"
-            dangerouslySetInnerHTML={{
-              __html: svg.replace(
-                '<?xml version="1.0" encoding="UTF-8"?>',
-                ""
-              ),
-            }}
-          />
+          <div className="flex h-full w-full items-center justify-center p-2">
+            <div
+              className="max-h-full max-w-full [&_svg]:h-auto [&_svg]:max-h-full [&_svg]:w-full [&_svg]:max-w-full"
+              dangerouslySetInnerHTML={{
+                __html: svg.replace('<?xml version="1.0" encoding="UTF-8"?>', ""),
+              }}
+            />
+          </div>
         </div>
 
         <div
-          className="pointer-events-none absolute inset-y-0 w-0.5 bg-primary shadow-[0_0_12px_rgba(52,211,153,0.6)]"
+          className="pointer-events-none absolute inset-y-0 w-px bg-primary/80"
           style={{ left: `${comparePosition}%` }}
         />
 

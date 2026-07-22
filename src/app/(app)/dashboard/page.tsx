@@ -53,8 +53,7 @@ export default function DashboardPage() {
             Project dashboard
           </motion.h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            Track vectorization jobs, organize footwear assets into folders, and jump back into the
-            Studio.
+            Track vectorization jobs, organize files into folders, and jump back into the Studio.
           </p>
         </div>
         <Button asChild>

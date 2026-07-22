@@ -16,7 +16,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       transition={{ delay: index * 0.04, duration: 0.35 }}
     >
       <Link href={`/studio/${project.id}`}>
-        <Card className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
+        <Card className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:border-primary/35">
           <div className="relative h-36 overflow-hidden border-b border-border bg-muted/40 grid-dots">
             <svg viewBox="0 0 480 320" className="absolute inset-0 h-full w-full p-4 opacity-80">
               {project.layers

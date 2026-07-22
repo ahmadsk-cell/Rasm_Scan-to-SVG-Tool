@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Play, Sparkles } from "lucide-react";
+import { Play, PenTool } from "lucide-react";
 import { toast } from "sonner";
 import { UploadDropzone } from "@/components/studio/upload-dropzone";
 import { AnalysisConfig } from "@/components/studio/analysis-config";
@@ -17,6 +17,7 @@ export default function StudioPage() {
   const router = useRouter();
   const {
     images,
+    batchIntent,
     modes,
     isProcessing,
     setProcessing,
@@ -25,12 +26,13 @@ export default function StudioPage() {
     resetMilestones,
     setLayers,
     clearImages,
+    setCanvasSize,
   } = useStudioStore();
   const upsertProject = useProjectStore((s) => s.upsertProject);
 
   async function startProcessing() {
     if (!images.length) {
-      toast.error("Add at least one product image to begin.");
+      toast.error("Add at least one image to begin.");
       return;
     }
 
@@ -40,6 +42,14 @@ export default function StudioPage() {
     try {
       const result = await runVectorizationPipeline({
         modes,
+        intent: batchIntent,
+        sources: images.map((img) => ({
+          id: img.id,
+          label: img.label,
+          description: img.description,
+          previewUrl: img.previewUrl,
+          file: img.file,
+        })),
         onMilestone: (milestones, progress) => {
           setMilestones(milestones);
           setProgress(progress);
@@ -47,11 +57,18 @@ export default function StudioPage() {
       });
 
       const projectId = `proj-${Date.now()}`;
+      const baseName =
+        images.length > 1
+          ? `Batch · ${images.length} images`
+          : images[0]?.file.name.replace(/\.[^.]+$/, "") || "Untitled vector";
+
       const project: Project = {
         id: projectId,
-        name: images[0]?.file.name.replace(/\.[^.]+$/, "") || "Untitled Cleat Scan",
+        name: batchIntent.trim()
+          ? `${baseName} — ${batchIntent.trim().slice(0, 40)}`
+          : baseName,
         status: "completed",
-        folderId: "folder-cleats",
+        folderId: "folder-recent",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         views: images.map((img) => img.label),
@@ -64,15 +81,26 @@ export default function StudioPage() {
         },
         imageUrl: images[0]?.previewUrl,
         svgPreview: result.svg,
+        intent: batchIntent.trim() || undefined,
+        width: result.width,
+        height: result.height,
       };
 
+      setCanvasSize(result.width, result.height);
       setLayers(result.layers);
       upsertProject(project);
-      toast.success("Vectorization complete");
+      toast.success(
+        images.length > 1
+          ? `Traced ${images.length} images · ${result.layers.length} layers`
+          : `Traced · ${result.layers.length} layers`
+      );
       clearImages();
       router.push(`/studio/${projectId}`);
-    } catch {
-      toast.error("Vectorization failed. Try again.");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error instanceof Error ? error.message : "Vectorization failed. Try again."
+      );
     } finally {
       setProcessing(false);
     }
@@ -87,20 +115,24 @@ export default function StudioPage() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary"
           >
-            <Sparkles className="h-3.5 w-3.5" />
+            <PenTool className="h-3.5 w-3.5" />
             The Studio
           </motion.p>
           <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            Upload & process
+            Bulk upload & process
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Drop high-res footwear scans, choose geometry or detail extraction, and generate
-            multi-layer SVG paths with live progress feedback.
+            Drop any images and Rasm will trace them into real editable SVG layers in your
+            browser.
           </p>
         </div>
         <Button onClick={startProcessing} disabled={isProcessing || !images.length} size="lg">
           <Play className="h-4 w-4" />
-          {isProcessing ? "Processing…" : "Start vectorization"}
+          {isProcessing
+            ? "Tracing…"
+            : images.length > 1
+              ? `Trace ${images.length} images`
+              : "Start vectorization"}
         </Button>
       </div>
 

@@ -29,7 +29,9 @@ export function VectorControls() {
     <div className="glass-panel space-y-5 rounded-2xl p-4">
       <div>
         <h3 className="font-display text-sm font-semibold">Vector tuning</h3>
-        <p className="text-xs text-muted-foreground">Fine-tune fidelity on the fly</p>
+        <p className="text-xs text-muted-foreground">
+          Preview aids — re-trace with new thresholds coming soon
+        </p>
       </div>
 
       {CONTROLS.map((control) => (

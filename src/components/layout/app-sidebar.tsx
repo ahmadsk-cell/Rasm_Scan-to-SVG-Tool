@@ -9,11 +9,12 @@ import {
   LogOut,
   Settings,
   Sparkles,
-  VectorSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { BuiltBy } from "@/components/layout/built-by";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -30,18 +31,12 @@ export function AppSidebar() {
   const { user, signOut } = useAuthStore();
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/90 backdrop-blur-xl md:flex">
-      <div className="flex items-center gap-3 px-5 py-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/30">
-          <VectorSquare className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="font-display text-base font-semibold tracking-tight">VectorPath</p>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">AI Studio</p>
-        </div>
+    <aside className="hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
+      <div className="px-4 py-5">
+        <BrandLogo size={48} withWordmark />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3">
+      <nav className="flex flex-1 flex-col gap-0.5 px-2">
         {NAV.map((item) => {
           const active = pathname.startsWith(item.href);
           const Icon = item.icon;
@@ -50,17 +45,17 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                "relative flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                 active
                   ? "text-foreground"
-                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
               )}
             >
               {active && (
                 <motion.span
                   layoutId="nav-active"
-                  className="absolute inset-0 rounded-lg bg-sidebar-accent ring-1 ring-primary/20"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  className="absolute inset-0 rounded-md bg-sidebar-accent"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
                 />
               )}
               <Icon className="relative z-10 h-4 w-4" />
@@ -70,7 +65,7 @@ export function AppSidebar() {
         })}
       </nav>
 
-      <div className="space-y-3 p-4">
+      <div className="space-y-3 p-3">
         <Separator />
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
@@ -93,6 +88,7 @@ export function AppSidebar() {
           <LogOut className="h-4 w-4" />
           Sign out
         </Button>
+        <BuiltBy showLogo />
       </div>
     </aside>
   );

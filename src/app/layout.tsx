@@ -19,9 +19,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VectorPath AI — Footwear Vectorization Studio",
+  title: "Rasm — Vector Studio",
   description:
-    "Enterprise SaaS for converting sports footwear product imagery into multi-layered, production-ready SVG paths.",
+    "Turn any image into multi-layered, editable SVG paths. Built by ASK Andalus.",
 };
 
 export default function RootLayout({

@@ -12,6 +12,8 @@ export interface VectorLayer {
   pathData: string;
   color: string;
   group?: string;
+  /** When true, preview/export uses fill instead of stroke-only wireframe */
+  filled?: boolean;
 }
 
 export interface VectorTuning {
@@ -40,6 +42,11 @@ export interface Project {
   analysisModes: AnalysisMode[];
   tuning: VectorTuning;
   svgPreview?: string;
+  /** Batch-level extraction intent from the user */
+  intent?: string;
+  /** ViewBox size from the traced raster */
+  width?: number;
+  height?: number;
 }
 
 export interface Folder {
@@ -53,6 +60,8 @@ export interface UploadedImage {
   file: File;
   previewUrl: string;
   label: string;
+  /** What to extract from this specific image */
+  description: string;
 }
 
 export interface WorkspaceUser {

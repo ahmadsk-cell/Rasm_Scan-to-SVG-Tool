@@ -14,8 +14,8 @@ interface AuthState {
 const DEMO_USER: WorkspaceUser = {
   id: "user-1",
   name: "Ava Chen",
-  email: "ava@acme-footwear.com",
-  organization: "Acme Footwear Lab",
+  email: "ava@studio.example",
+  organization: "ASK Andalus Studio",
   role: "admin",
 };
 
@@ -34,6 +34,6 @@ export const useAuthStore = create<AuthState>()(
         }),
       signOut: () => set({ user: null, isAuthenticated: false }),
     }),
-    { name: "vectorpath-auth" }
+    { name: "rasm-auth" }
   )
 );

@@ -36,59 +36,61 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Light — cool paper slate with olive ink */
 :root {
-  --radius: 0.75rem;
-  --background: #f4f6f8;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #10b981;
-  --primary-foreground: #022c22;
-  --secondary: #e2e8f0;
-  --secondary-foreground: #0f172a;
-  --muted: #e8eef4;
-  --muted-foreground: #64748b;
-  --accent: #d1fae5;
-  --accent-foreground: #065f46;
-  --destructive: #ef4444;
-  --border: #d7e0ea;
-  --input: #d7e0ea;
-  --ring: #10b981;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
-  --sidebar-border: #e2e8f0;
-  --sidebar-accent: #ecfdf5;
+  --radius: 0.5rem;
+  --background: #eceef1;
+  --foreground: #1c1f24;
+  --card: #f7f8f9;
+  --card-foreground: #1c1f24;
+  --popover: #f7f8f9;
+  --popover-foreground: #1c1f24;
+  --primary: #5d7a62;
+  --primary-foreground: #f4f6f4;
+  --secondary: #dfe3e8;
+  --secondary-foreground: #1c1f24;
+  --muted: #e3e6ea;
+  --muted-foreground: #5c6570;
+  --accent: #d8e0d9;
+  --accent-foreground: #3d4f42;
+  --destructive: #b54a4a;
+  --border: #c8ced6;
+  --input: #c8ced6;
+  --ring: #5d7a62;
+  --success: #5d7a62;
+  --warning: #a67c3a;
+  --sidebar: #e4e7eb;
+  --sidebar-foreground: #1c1f24;
+  --sidebar-border: #c8ced6;
+  --sidebar-accent: #d5ddd6;
 }
 
+/* Dark — Photoshop/GIMP panel slate with faded sage */
 .dark {
-  --background: #070b12;
-  --foreground: #e8eef7;
-  --card: #0e1520;
-  --card-foreground: #e8eef7;
-  --popover: #121a27;
-  --popover-foreground: #e8eef7;
-  --primary: #34d399;
-  --primary-foreground: #022c22;
-  --secondary: #1a2433;
-  --secondary-foreground: #e8eef7;
-  --muted: #151d2b;
-  --muted-foreground: #94a3b8;
-  --accent: #12261f;
-  --accent-foreground: #6ee7b7;
-  --destructive: #f87171;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #34d399;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --sidebar: #0a1018;
-  --sidebar-foreground: #e8eef7;
-  --sidebar-border: #172033;
-  --sidebar-accent: #12261f;
+  --background: #1a1c1e;
+  --foreground: #d5d8dc;
+  --card: #232629;
+  --card-foreground: #d5d8dc;
+  --popover: #2a2d31;
+  --popover-foreground: #d5d8dc;
+  --primary: #8fae8b;
+  --primary-foreground: #151816;
+  --secondary: #2f3338;
+  --secondary-foreground: #d5d8dc;
+  --muted: #2a2d31;
+  --muted-foreground: #8b929a;
+  --accent: #2a332c;
+  --accent-foreground: #a8c0a4;
+  --destructive: #c07070;
+  --border: #3a3f45;
+  --input: #3a3f45;
+  --ring: #8fae8b;
+  --success: #8fae8b;
+  --warning: #c4a06a;
+  --sidebar: #16181a;
+  --sidebar-foreground: #d5d8dc;
+  --sidebar-border: #2e3236;
+  --sidebar-accent: #252b26;
 }
 
 @layer base {
@@ -102,39 +104,34 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 10% -10%, rgba(16, 185, 129, 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 90% 0%, rgba(56, 189, 248, 0.08), transparent);
     min-height: 100vh;
   }
 
   .dark body {
     background-image:
-      radial-gradient(ellipse 70% 45% at 8% -8%, rgba(52, 211, 153, 0.14), transparent),
-      radial-gradient(ellipse 55% 35% at 92% 5%, rgba(56, 189, 248, 0.08), transparent),
-      radial-gradient(ellipse 40% 30% at 50% 100%, rgba(15, 23, 42, 0.9), transparent);
+      linear-gradient(180deg, rgba(26, 28, 30, 1) 0%, rgba(20, 22, 24, 1) 100%);
   }
 }
 
 @layer utilities {
   .glass {
-    @apply border border-white/10 bg-white/60 shadow-lg backdrop-blur-xl dark:bg-slate-900/55;
+    @apply border border-border/80 bg-card/90 shadow-md backdrop-blur-md;
   }
 
   .glass-panel {
-    @apply border border-border/80 bg-card/80 shadow-xl backdrop-blur-2xl;
+    @apply border border-border bg-card/95 shadow-md;
   }
 
   .text-gradient {
-    @apply bg-linear-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent;
+    @apply text-primary;
   }
 
   .grid-dots {
-    background-image: radial-gradient(circle, rgba(148, 163, 184, 0.22) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-image: radial-gradient(circle, rgba(100, 110, 120, 0.28) 1px, transparent 1px);
+    background-size: 16px 16px;
   }
 
   .dark .grid-dots {
-    background-image: radial-gradient(circle, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(120, 130, 140, 0.14) 1px, transparent 1px);
   }
 }

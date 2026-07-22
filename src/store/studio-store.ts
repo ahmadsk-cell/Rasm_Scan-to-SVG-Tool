@@ -12,6 +12,7 @@ import { PROCESSING_STEPS } from "@/lib/vector-engine";
 
 interface StudioState {
   images: UploadedImage[];
+  batchIntent: string;
   modes: AnalysisMode[];
   isProcessing: boolean;
   progress: number;
@@ -19,11 +20,15 @@ interface StudioState {
   layers: VectorLayer[];
   tuning: VectorTuning;
   comparePosition: number;
+  canvasWidth: number;
+  canvasHeight: number;
   activeProjectId: string | null;
   selectedLayerId: string | null;
   addImages: (images: UploadedImage[]) => void;
   removeImage: (id: string) => void;
+  updateImage: (id: string, patch: Partial<UploadedImage>) => void;
   clearImages: () => void;
+  setBatchIntent: (intent: string) => void;
   toggleMode: (mode: AnalysisMode) => void;
   setProcessing: (value: boolean) => void;
   setProgress: (value: number) => void;
@@ -33,6 +38,7 @@ interface StudioState {
   updateLayer: (id: string, patch: Partial<VectorLayer>) => void;
   setTuning: (tuning: Partial<VectorTuning>) => void;
   setComparePosition: (value: number) => void;
+  setCanvasSize: (width: number, height: number) => void;
   setActiveProjectId: (id: string | null) => void;
   setSelectedLayerId: (id: string | null) => void;
 }
@@ -44,6 +50,7 @@ const initialMilestones: ProcessingMilestone[] = PROCESSING_STEPS.map((step) => 
 
 export const useStudioStore = create<StudioState>((set) => ({
   images: [],
+  batchIntent: "",
   modes: ["geometry"],
   isProcessing: false,
   progress: 0,
@@ -55,6 +62,8 @@ export const useStudioStore = create<StudioState>((set) => ({
     pathSimplification: 20,
   },
   comparePosition: 50,
+  canvasWidth: 480,
+  canvasHeight: 320,
   activeProjectId: null,
   selectedLayerId: null,
 
@@ -64,7 +73,14 @@ export const useStudioStore = create<StudioState>((set) => ({
   removeImage: (id) =>
     set((state) => ({ images: state.images.filter((img) => img.id !== id) })),
 
-  clearImages: () => set({ images: [] }),
+  updateImage: (id, patch) =>
+    set((state) => ({
+      images: state.images.map((img) => (img.id === id ? { ...img, ...patch } : img)),
+    })),
+
+  clearImages: () => set({ images: [], batchIntent: "" }),
+
+  setBatchIntent: (intent) => set({ batchIntent: intent }),
 
   toggleMode: (mode) =>
     set((state) => {
@@ -91,6 +107,7 @@ export const useStudioStore = create<StudioState>((set) => ({
   setTuning: (tuning) =>
     set((state) => ({ tuning: { ...state.tuning, ...tuning } })),
   setComparePosition: (value) => set({ comparePosition: value }),
+  setCanvasSize: (width, height) => set({ canvasWidth: width, canvasHeight: height }),
   setActiveProjectId: (id) => set({ activeProjectId: id }),
   setSelectedLayerId: (id) => set({ selectedLayerId: id }),
 }));

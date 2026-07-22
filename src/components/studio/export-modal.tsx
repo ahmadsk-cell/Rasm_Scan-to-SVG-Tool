@@ -44,7 +44,7 @@ const FORMATS: Array<{
   {
     id: "json",
     label: "JSON Manifest",
-    description: "Coordinate data for manufacturing & game assets",
+    description: "Coordinate data for design tools and pipelines",
     icon: FileJson2,
   },
   {
@@ -65,10 +65,18 @@ function downloadBlob(filename: string, content: string, type: string) {
   URL.revokeObjectURL(url);
 }
 
-export function ExportModal() {
-  const { layers, tuning } = useStudioStore();
+export function ExportModal({
+  width = 480,
+  height = 320,
+}: {
+  width?: number;
+  height?: number;
+}) {
+  const { layers, tuning, canvasWidth, canvasHeight } = useStudioStore();
   const [open, setOpen] = useState(false);
   const [format, setFormat] = useState<ExportFormat>("svg");
+  const exportWidth = width || canvasWidth;
+  const exportHeight = height || canvasHeight;
 
   function handleExport() {
     if (!layers.length) {
@@ -82,17 +90,17 @@ export function ExportModal() {
       case "svg":
       case "ai":
         downloadBlob(
-          format === "ai" ? "vectorpath-export.ai.svg" : "vectorpath-export.svg",
-          buildSvgFromLayers(tuned),
+          format === "ai" ? "rasm-export.ai.svg" : "rasm-export.svg",
+          buildSvgFromLayers(tuned, exportWidth, exportHeight),
           "image/svg+xml"
         );
         break;
       case "dxf":
-        downloadBlob("vectorpath-export.dxf", exportAsDxf(tuned), "application/dxf");
+        downloadBlob("rasm-export.dxf", exportAsDxf(tuned), "application/dxf");
         break;
       case "json":
         downloadBlob(
-          "vectorpath-manifest.json",
+          "rasm-manifest.json",
           JSON.stringify(generateCoordinateManifest(tuned), null, 2),
           "application/json"
         );
@@ -115,7 +123,7 @@ export function ExportModal() {
         <DialogHeader>
           <DialogTitle>Export Center</DialogTitle>
           <DialogDescription>
-            Download production-ready vector assets for design, CAD, or manufacturing pipelines.
+            Download vector assets for design tools, CAD, or downstream pipelines.
           </DialogDescription>
         </DialogHeader>
 
