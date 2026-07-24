@@ -70,28 +70,29 @@ You don’t need a GitHub account for this demo login.
 Tips for better results:
 
 - Clear shapes and **higher contrast** work best.
-- Busy photos with messy backgrounds may create lots of tiny layers.
-- Start with **Geometry** mode for a cleaner outline.
+- Busy photos / scenery: use **Simple** or **Balanced** path detail.
+- Start with **Geometry** for cleaner silhouettes.
 
 ---
 
-## Step 4 — Describe what you want (optional)
+## Step 4 — Set path detail & describe what you want
 
-1. In **What are you looking for?**, type a short note for the whole batch.  
+1. On the right under **Path detail**, pick how fine the tracing should be:
+   - **Simple** — fastest; best for photos and scenery  
+   - **Balanced** — good default for most images  
+   - **Detailed / Maximum** — more shapes (slower)
+2. Optionally toggle **Geometry** (silhouettes) and **Internal detail**.
+3. In **What are you looking for?**, type a short note for the batch if you want.  
    Example: `Clean outer silhouette and logo mark`
-2. For each image, you can also fill **Extract from this image** with a more specific note.  
-   Example: `Just the icon, ignore background text`
-3. On the right, choose:
-   - **Geometry Mode** — simpler outlines / fewer colors  
-   - **Detail Extraction** — more layers and finer shapes  
+4. For each image, you can refine **Extract from this image**.
 
-These notes help label your layers. The tracing itself runs from the image (not from ChatGPT-style AI understanding yet).
+Notes help label layers. Tracing itself is classical vectorization (not ChatGPT-style AI).
 
 ---
 
 ## Step 5 — Start vectorization
 
-1. Click **Start vectorization** (or **Trace N images** if you uploaded several).
+1. Click **Trace image** (or **Trace N** if you uploaded several).
 2. Watch the progress steps (preparing → tracing → assembling layers).
 3. When it finishes, Rasm opens the **workspace** with your result.
 

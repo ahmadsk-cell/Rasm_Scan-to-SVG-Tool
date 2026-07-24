@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import type {
   AnalysisMode,
+  PathDetailLevel,
   ProcessingMilestone,
   UploadedImage,
   VectorLayer,
@@ -14,6 +15,7 @@ interface StudioState {
   images: UploadedImage[];
   batchIntent: string;
   modes: AnalysisMode[];
+  pathDetail: PathDetailLevel;
   isProcessing: boolean;
   progress: number;
   milestones: ProcessingMilestone[];
@@ -30,6 +32,7 @@ interface StudioState {
   clearImages: () => void;
   setBatchIntent: (intent: string) => void;
   toggleMode: (mode: AnalysisMode) => void;
+  setPathDetail: (level: PathDetailLevel) => void;
   setProcessing: (value: boolean) => void;
   setProgress: (value: number) => void;
   setMilestones: (milestones: ProcessingMilestone[]) => void;
@@ -52,6 +55,7 @@ export const useStudioStore = create<StudioState>((set) => ({
   images: [],
   batchIntent: "",
   modes: ["geometry"],
+  pathDetail: "balanced",
   isProcessing: false,
   progress: 0,
   milestones: initialMilestones,
@@ -92,6 +96,8 @@ export const useStudioStore = create<StudioState>((set) => ({
           : [...state.modes, mode],
       };
     }),
+
+  setPathDetail: (level) => set({ pathDetail: level }),
 
   setProcessing: (value) => set({ isProcessing: value }),
   setProgress: (value) => set({ progress: value }),

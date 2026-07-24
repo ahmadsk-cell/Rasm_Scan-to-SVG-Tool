@@ -1,14 +1,17 @@
 import type {
   AnalysisMode,
+  PathDetailLevel,
   ProcessingMilestone,
   VectorLayer,
   VectorTuning,
 } from "@/types";
-import { traceImageToLayers, type TraceSource } from "@/lib/trace-image";
+import { PATH_DETAIL_PRESETS, traceImageToLayers, type TraceSource } from "@/lib/trace-image";
+
+export { PATH_DETAIL_PRESETS };
 
 export const PROCESSING_STEPS: Omit<ProcessingMilestone, "status">[] = [
   { id: "bg", label: "Preparing images…" },
-  { id: "edges", label: "Quantizing colors…" },
+  { id: "edges", label: "Simplifying colors…" },
   { id: "semantic", label: "Matching extraction targets…" },
   { id: "trace", label: "Tracing vector paths…" },
   { id: "bezier", label: "Optimizing curves…" },
@@ -24,7 +27,7 @@ export function buildSvgFromLayers(
     .filter((l) => l.visible)
     .map((l) => {
       if (l.filled) {
-        return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="${l.color}" fill-opacity="0.85" stroke="${l.color}" stroke-width="0.5" stroke-linejoin="round"/>`;
+        return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="${l.color}" fill-opacity="0.88" stroke="${l.color}" stroke-width="0.4" stroke-linejoin="round"/>`;
       }
       return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="none" stroke="${l.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     })
@@ -38,10 +41,6 @@ export function buildSvgFromLayers(
 </svg>`;
 }
 
-/**
- * Tuning currently adjusts presentation softly without destroying real path data.
- * (Re-trace with new thresholds can be added later.)
- */
 export function applyTuning(layers: VectorLayer[], _tuning: VectorTuning): VectorLayer[] {
   return layers;
 }
@@ -80,12 +79,9 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Real client-side vectorization pipeline.
- * Uses ImageTracer in the browser — no Python service required.
- */
 export async function runVectorizationPipeline(options: {
   modes: AnalysisMode[];
+  pathDetail?: PathDetailLevel;
   intent?: string;
   sources: TraceSource[];
   onMilestone?: (milestones: ProcessingMilestone[], progress: number) => void;
@@ -103,13 +99,19 @@ export async function runVectorizationPipeline(options: {
     throw new Error("No images to vectorize");
   }
 
+  const pathDetail = options.pathDetail ?? "balanced";
+  const preset = PATH_DETAIL_PRESETS[pathDetail];
+
   const milestones: ProcessingMilestone[] = PROCESSING_STEPS.map((step, index) => {
     let label = step.label;
     if (step.id === "semantic" && options.intent?.trim()) {
       label = `Matching “${options.intent.trim().slice(0, 42)}”…`;
     }
-    if (step.id === "trace" && options.sources.length > 1) {
-      label = `Tracing ${options.sources.length} images…`;
+    if (step.id === "trace") {
+      label =
+        options.sources.length > 1
+          ? `Tracing ${options.sources.length} images (${preset.label})…`
+          : `Tracing paths (${preset.label})…`;
     }
     return {
       ...step,
@@ -122,7 +124,7 @@ export async function runVectorizationPipeline(options: {
     for (let i = 0; i <= index; i++) milestones[i].status = "done";
     if (index + 1 < milestones.length) milestones[index + 1].status = "active";
     options.onMilestone?.([...milestones], progress);
-    await sleep(120);
+    await sleep(60);
   };
 
   options.onMilestone?.([...milestones], 4);
@@ -146,7 +148,7 @@ export async function runVectorizationPipeline(options: {
 
   for (let i = 0; i < options.sources.length; i++) {
     const source = options.sources[i];
-    const traced = await traceImageToLayers(source, options.modes, i);
+    const traced = await traceImageToLayers(source, options.modes, i, pathDetail);
     allLayers.push(...traced.layers);
     if (i === 0) {
       width = traced.width;
@@ -160,7 +162,6 @@ export async function runVectorizationPipeline(options: {
   await bump(3, 82);
   await bump(4, 90);
 
-  // Optional batch intent becomes a named guide layer group label only (no fake geometry)
   if (options.intent?.trim() && allLayers.length) {
     allLayers[0] = {
       ...allLayers[0],

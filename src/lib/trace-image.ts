@@ -1,8 +1,6 @@
-import type { AnalysisMode, VectorLayer } from "@/types";
+import type { AnalysisMode, PathDetailLevel, VectorLayer } from "@/types";
 
 const LAYER_COLORS = ["#8fae8b", "#7a92a8", "#b8a07a", "#c4a06a", "#a88888", "#9a9a88"];
-
-const MAX_DIMENSION = 1200;
 
 export interface TraceSource {
   id: string;
@@ -19,6 +17,81 @@ export interface TraceResult {
   height: number;
 }
 
+export const PATH_DETAIL_PRESETS: Record<
+  PathDetailLevel,
+  {
+    label: string;
+    hint: string;
+    maxDimension: number;
+    numberofcolors: number;
+    pathomit: number;
+    ltres: number;
+    qtres: number;
+    blurradius: number;
+    blurdelta: number;
+    colorquantcycles: number;
+    linefilter: boolean;
+    maxLayers: number;
+  }
+> = {
+  simple: {
+    label: "Simple",
+    hint: "Fast silhouettes — best for logos, icons, and photos",
+    maxDimension: 560,
+    numberofcolors: 3,
+    pathomit: 36,
+    ltres: 2.4,
+    qtres: 2.4,
+    blurradius: 3,
+    blurdelta: 48,
+    colorquantcycles: 2,
+    linefilter: true,
+    maxLayers: 18,
+  },
+  balanced: {
+    label: "Balanced",
+    hint: "Clean shapes with moderate detail",
+    maxDimension: 720,
+    numberofcolors: 5,
+    pathomit: 18,
+    ltres: 1.4,
+    qtres: 1.4,
+    blurradius: 1,
+    blurdelta: 32,
+    colorquantcycles: 2,
+    linefilter: true,
+    maxLayers: 40,
+  },
+  detailed: {
+    label: "Detailed",
+    hint: "More regions and finer curves",
+    maxDimension: 960,
+    numberofcolors: 8,
+    pathomit: 8,
+    ltres: 0.9,
+    qtres: 0.9,
+    blurradius: 0,
+    blurdelta: 20,
+    colorquantcycles: 3,
+    linefilter: true,
+    maxLayers: 72,
+  },
+  maximum: {
+    label: "Maximum",
+    hint: "Highest fidelity — slower on complex photos",
+    maxDimension: 1100,
+    numberofcolors: 12,
+    pathomit: 3,
+    ltres: 0.55,
+    qtres: 0.55,
+    blurradius: 0,
+    blurdelta: 20,
+    colorquantcycles: 3,
+    linefilter: false,
+    maxLayers: 120,
+  },
+};
+
 function rgbToHex(r: number, g: number, b: number) {
   return (
     "#" +
@@ -29,7 +102,7 @@ function rgbToHex(r: number, g: number, b: number) {
 }
 
 function isNearWhite(r: number, g: number, b: number, a: number) {
-  return a < 16 || (r > 245 && g > 245 && b > 245);
+  return a < 16 || (r > 242 && g > 242 && b > 242);
 }
 
 function loadImageElement(url: string): Promise<HTMLImageElement> {
@@ -41,12 +114,21 @@ function loadImageElement(url: string): Promise<HTMLImageElement> {
   });
 }
 
-function imageToImageData(img: HTMLImageElement): {
-  imageData: ImageData;
-  width: number;
-  height: number;
-} {
-  const scale = Math.min(1, MAX_DIMENSION / Math.max(img.naturalWidth, img.naturalHeight));
+function yieldToMain() {
+  return new Promise<void>((resolve) => {
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(() => resolve(), { timeout: 80 });
+    } else {
+      setTimeout(resolve, 0);
+    }
+  });
+}
+
+function imageToImageData(
+  img: HTMLImageElement,
+  maxDimension: number
+): { imageData: ImageData; width: number; height: number } {
+  const scale = Math.min(1, maxDimension / Math.max(img.naturalWidth, img.naturalHeight));
   const width = Math.max(1, Math.round(img.naturalWidth * scale));
   const height = Math.max(1, Math.round(img.naturalHeight * scale));
 
@@ -58,65 +140,48 @@ function imageToImageData(img: HTMLImageElement): {
 
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, width, height);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
   ctx.drawImage(img, 0, 0, width, height);
 
   return { imageData: ctx.getImageData(0, 0, width, height), width, height };
 }
 
-function buildOptions(modes: AnalysisMode[]) {
-  const detail = modes.includes("detail");
-  const geometry = modes.includes("geometry");
+function buildOptions(modes: AnalysisMode[], detail: PathDetailLevel) {
+  const preset = PATH_DETAIL_PRESETS[detail];
+  const geometryOnly = modes.includes("geometry") && !modes.includes("detail");
+  const detailOnly = modes.includes("detail") && !modes.includes("geometry");
 
-  if (geometry && !detail) {
-    return {
-      numberofcolors: 4,
-      pathomit: 16,
-      ltres: 1.2,
-      qtres: 1.2,
-      blurradius: 1,
-      blurdelta: 32,
-      colorsampling: 2,
-      colorquantcycles: 3,
-      strokewidth: 0,
-      linefilter: true,
-      rightangleenhance: true,
-      roundcoords: 1,
-      viewbox: true,
-      scale: 1,
-    };
+  let colors = preset.numberofcolors;
+  let pathomit = preset.pathomit;
+  let blur = preset.blurradius;
+
+  if (geometryOnly) {
+    colors = Math.max(2, Math.min(colors, 4));
+    pathomit = Math.max(pathomit, 20);
+    blur = Math.max(blur, 1);
+  } else if (detailOnly) {
+    colors = Math.min(16, colors + 2);
+    pathomit = Math.max(2, pathomit - 2);
   }
 
-  if (detail && !geometry) {
-    return {
-      numberofcolors: 12,
-      pathomit: 4,
-      ltres: 0.6,
-      qtres: 0.6,
-      blurradius: 0,
-      colorsampling: 2,
-      colorquantcycles: 3,
-      strokewidth: 0,
-      linefilter: false,
-      roundcoords: 2,
-      viewbox: true,
-      scale: 1,
-    };
-  }
-
-  // Both modes: balanced multi-layer color trace
   return {
-    numberofcolors: 8,
-    pathomit: 8,
-    ltres: 0.8,
-    qtres: 0.8,
-    blurradius: 0,
+    numberofcolors: colors,
+    pathomit,
+    ltres: preset.ltres,
+    qtres: preset.qtres,
+    blurradius: blur,
+    blurdelta: preset.blurdelta,
     colorsampling: 2,
-    colorquantcycles: 3,
+    colorquantcycles: preset.colorquantcycles,
     strokewidth: 0,
-    linefilter: true,
+    linefilter: preset.linefilter,
+    rightangleenhance: true,
     roundcoords: 1,
     viewbox: true,
     scale: 1,
+    maxLayers: preset.maxLayers,
+    maxDimension: preset.maxDimension,
   };
 }
 
@@ -134,20 +199,29 @@ function slugify(text: string, fallback: string) {
   return cleaned || fallback;
 }
 
+function pathComplexity(d: string) {
+  return d.length;
+}
+
 /**
  * Trace a single raster image into editable SVG path layers using ImageTracer.
  */
 export async function traceImageToLayers(
   source: TraceSource,
   modes: AnalysisMode[],
-  index = 0
+  index = 0,
+  detail: PathDetailLevel = "balanced"
 ): Promise<TraceResult> {
   const ImageTracer = (await import("imagetracerjs")).default;
-  const img = await loadImageElement(source.previewUrl);
-  const { imageData, width, height } = imageToImageData(img);
-  const options = buildOptions(modes);
+  await yieldToMain();
 
+  const img = await loadImageElement(source.previewUrl);
+  const options = buildOptions(modes, detail);
+  const { imageData, width, height } = imageToImageData(img, options.maxDimension);
+
+  await yieldToMain();
   const traced = ImageTracer.imagedataToTracedata(imageData, options);
+  await yieldToMain();
   const svg = ImageTracer.getsvgstring(traced, options);
 
   const parser = new DOMParser();
@@ -190,7 +264,6 @@ export async function traceImageToLayers(
     });
   });
 
-  // Fallback: if DOM parse failed, keep raw SVG as one stroke layer from getsvgstring paths
   if (!layers.length) {
     const rawPaths = svg.match(/<path\b[^>]*>/g) ?? [];
     rawPaths.forEach((raw, pathIndex) => {
@@ -211,9 +284,16 @@ export async function traceImageToLayers(
 
   if (!layers.length) {
     throw new Error(
-      `No vector paths found in “${source.label || source.file?.name || "image"}”. Try a higher-contrast image.`
+      `No vector paths found in “${source.label || source.file?.name || "image"}”. Try Simple detail or a higher-contrast image.`
     );
   }
 
-  return { layers, svg, width, height };
+  // Keep the most substantial paths first — drops tiny noise on scenery
+  layers.sort((a, b) => pathComplexity(b.pathData) - pathComplexity(a.pathData));
+  const capped = layers.slice(0, options.maxLayers).map((layer, i) => ({
+    ...layer,
+    id: `trace-${source.id}-${i}`,
+  }));
+
+  return { layers: capped, svg, width, height };
 }

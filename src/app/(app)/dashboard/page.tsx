@@ -34,13 +34,13 @@ export default function DashboardPage() {
   const projects = filteredProjects();
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mx-auto max-w-7xl space-y-8 px-5 py-9 sm:px-8">
+      <div className="flex flex-col gap-5 border-b border-border/70 pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs uppercase tracking-[0.2em] text-primary"
+            className="text-[11px] font-medium uppercase tracking-[0.2em] text-primary"
           >
             Workspace
           </motion.p>
@@ -48,24 +48,24 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-4xl"
+            className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-[2.35rem] sm:leading-tight"
           >
-            Project dashboard
+            Projects
           </motion.h1>
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            Track vectorization jobs, organize files into folders, and jump back into the Studio.
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            Recent jobs and folders — open a card to refine layers and export.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild size="lg" className="shadow-sm">
           <Link href="/studio">
             <Plus className="h-4 w-4" />
-            New vectorization
+            New trace
           </Link>
         </Button>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
-        <aside className="space-y-2 rounded-xl border border-border bg-card/50 p-3">
+      <div className="grid gap-5 lg:grid-cols-[240px_1fr]">
+        <aside className="space-y-2 rounded-2xl border border-border/80 bg-card/70 p-3.5 shadow-sm backdrop-blur-sm">
           <p className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Folders
           </p>

@@ -19,9 +19,9 @@ export function ProcessingProgress() {
     >
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <p className="font-display text-lg font-semibold">Vectorizing batch</p>
+          <p className="font-display text-lg font-semibold tracking-tight">Tracing</p>
           <p className="text-sm text-muted-foreground">
-            Edge detection → contour tracing → bezier optimization
+            Color simplify → path trace → layer cleanup
           </p>
         </div>
         <span className="font-mono text-sm text-primary">{progress}%</span>

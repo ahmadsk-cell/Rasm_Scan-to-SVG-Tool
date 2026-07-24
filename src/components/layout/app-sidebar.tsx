@@ -31,12 +31,12 @@ export function AppSidebar() {
   const { user, signOut } = useAuthStore();
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
-      <div className="px-4 py-5">
+    <aside className="hidden w-[15.5rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl md:flex">
+      <div className="px-4 py-6">
         <BrandLogo size={48} withWordmark />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-0.5 px-2">
+      <nav className="flex flex-1 flex-col gap-0.5 px-2.5">
         {NAV.map((item) => {
           const active = pathname.startsWith(item.href);
           const Icon = item.icon;
@@ -45,17 +45,17 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                "relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
                 active
                   ? "text-foreground"
-                  : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
               )}
             >
               {active && (
                 <motion.span
                   layoutId="nav-active"
-                  className="absolute inset-0 rounded-md bg-sidebar-accent"
-                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  className="absolute inset-0 rounded-xl bg-sidebar-accent ring-1 ring-primary/15"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}
               <Icon className="relative z-10 h-4 w-4" />
@@ -65,9 +65,9 @@ export function AppSidebar() {
         })}
       </nav>
 
-      <div className="space-y-3 p-3">
-        <Separator />
-        <div className="flex items-center justify-between gap-2">
+      <div className="space-y-3 p-3.5">
+        <Separator className="opacity-70" />
+        <div className="flex items-center justify-between gap-2 px-1">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{user?.name ?? "Guest"}</p>
             <p className="truncate text-xs text-muted-foreground">

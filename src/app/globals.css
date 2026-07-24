@@ -36,61 +36,59 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Light — cool paper slate with olive ink */
 :root {
-  --radius: 0.5rem;
-  --background: #eceef1;
-  --foreground: #1c1f24;
-  --card: #f7f8f9;
-  --card-foreground: #1c1f24;
-  --popover: #f7f8f9;
-  --popover-foreground: #1c1f24;
-  --primary: #5d7a62;
-  --primary-foreground: #f4f6f4;
-  --secondary: #dfe3e8;
-  --secondary-foreground: #1c1f24;
-  --muted: #e3e6ea;
-  --muted-foreground: #5c6570;
-  --accent: #d8e0d9;
-  --accent-foreground: #3d4f42;
+  --radius: 0.65rem;
+  --background: #eef0f2;
+  --foreground: #171a1f;
+  --card: #f8f9fa;
+  --card-foreground: #171a1f;
+  --popover: #f8f9fa;
+  --popover-foreground: #171a1f;
+  --primary: #5a7560;
+  --primary-foreground: #f3f6f3;
+  --secondary: #e2e6eb;
+  --secondary-foreground: #171a1f;
+  --muted: #e6e9ed;
+  --muted-foreground: #5a6370;
+  --accent: #d9e2db;
+  --accent-foreground: #33443a;
   --destructive: #b54a4a;
-  --border: #c8ced6;
-  --input: #c8ced6;
-  --ring: #5d7a62;
-  --success: #5d7a62;
+  --border: #cdd3db;
+  --input: #cdd3db;
+  --ring: #5a7560;
+  --success: #5a7560;
   --warning: #a67c3a;
-  --sidebar: #e4e7eb;
-  --sidebar-foreground: #1c1f24;
-  --sidebar-border: #c8ced6;
-  --sidebar-accent: #d5ddd6;
+  --sidebar: #e8ebef;
+  --sidebar-foreground: #171a1f;
+  --sidebar-border: #d0d5dc;
+  --sidebar-accent: #d7e0d9;
 }
 
-/* Dark — Photoshop/GIMP panel slate with faded sage */
 .dark {
-  --background: #1a1c1e;
-  --foreground: #d5d8dc;
-  --card: #232629;
-  --card-foreground: #d5d8dc;
-  --popover: #2a2d31;
-  --popover-foreground: #d5d8dc;
+  --background: #121416;
+  --foreground: #e6e8eb;
+  --card: #1b1e22;
+  --card-foreground: #e6e8eb;
+  --popover: #22262b;
+  --popover-foreground: #e6e8eb;
   --primary: #8fae8b;
-  --primary-foreground: #151816;
-  --secondary: #2f3338;
-  --secondary-foreground: #d5d8dc;
-  --muted: #2a2d31;
-  --muted-foreground: #8b929a;
-  --accent: #2a332c;
-  --accent-foreground: #a8c0a4;
+  --primary-foreground: #121614;
+  --secondary: #262a30;
+  --secondary-foreground: #e6e8eb;
+  --muted: #22262b;
+  --muted-foreground: #939aa3;
+  --accent: #243028;
+  --accent-foreground: #b4cbb0;
   --destructive: #c07070;
-  --border: #3a3f45;
-  --input: #3a3f45;
+  --border: #2f343b;
+  --input: #2f343b;
   --ring: #8fae8b;
   --success: #8fae8b;
   --warning: #c4a06a;
-  --sidebar: #16181a;
-  --sidebar-foreground: #d5d8dc;
-  --sidebar-border: #2e3236;
-  --sidebar-accent: #252b26;
+  --sidebar: #0e1012;
+  --sidebar-foreground: #e6e8eb;
+  --sidebar-border: #25292e;
+  --sidebar-accent: #1c241f;
 }
 
 @layer base {
@@ -105,21 +103,27 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 100% -5%, rgba(90, 117, 96, 0.08), transparent 50%),
+      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(122, 146, 168, 0.06), transparent 45%),
+      linear-gradient(180deg, #eef0f2 0%, #e8ebef 100%);
   }
 
   .dark body {
     background-image:
-      linear-gradient(180deg, rgba(26, 28, 30, 1) 0%, rgba(20, 22, 24, 1) 100%);
+      radial-gradient(ellipse 90% 55% at 0% -10%, rgba(143, 174, 139, 0.08), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 80%, rgba(122, 146, 168, 0.04), transparent 50%),
+      linear-gradient(180deg, #121416 0%, #0f1113 100%);
   }
 }
 
 @layer utilities {
   .glass {
-    @apply border border-border/80 bg-card/90 shadow-md backdrop-blur-md;
+    @apply border border-border/70 bg-card/75 shadow-sm backdrop-blur-xl;
   }
 
   .glass-panel {
-    @apply border border-border bg-card/95 shadow-md;
+    @apply border border-border/80 bg-card/85 shadow-sm backdrop-blur-xl;
   }
 
   .text-gradient {
@@ -127,11 +131,11 @@
   }
 
   .grid-dots {
-    background-image: radial-gradient(circle, rgba(100, 110, 120, 0.28) 1px, transparent 1px);
-    background-size: 16px 16px;
+    background-image: radial-gradient(circle, rgba(100, 110, 120, 0.2) 1px, transparent 1px);
+    background-size: 18px 18px;
   }
 
   .dark .grid-dots {
-    background-image: radial-gradient(circle, rgba(120, 130, 140, 0.14) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(140, 150, 160, 0.1) 1px, transparent 1px);
   }
 }

@@ -2,6 +2,9 @@ export type ProjectStatus = "processing" | "completed" | "failed" | "draft";
 
 export type AnalysisMode = "geometry" | "detail";
 
+/** How finely Rasm should trace paths — lower = faster, cleaner shapes */
+export type PathDetailLevel = "simple" | "balanced" | "detailed" | "maximum";
+
 export type ExportFormat = "svg" | "dxf" | "json" | "ai";
 
 export interface VectorLayer {
@@ -47,6 +50,7 @@ export interface Project {
   /** ViewBox size from the traced raster */
   width?: number;
   height?: number;
+  pathDetail?: PathDetailLevel;
 }
 
 export interface Folder {

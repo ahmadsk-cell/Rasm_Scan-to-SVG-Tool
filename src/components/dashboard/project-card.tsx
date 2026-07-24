@@ -16,19 +16,20 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       transition={{ delay: index * 0.04, duration: 0.35 }}
     >
       <Link href={`/studio/${project.id}`}>
-        <Card className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:border-primary/35">
-          <div className="relative h-36 overflow-hidden border-b border-border bg-muted/40 grid-dots">
-            <svg viewBox="0 0 480 320" className="absolute inset-0 h-full w-full p-4 opacity-80">
+        <Card className="group overflow-hidden border-border/80 bg-card/80 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+          <div className="relative h-36 overflow-hidden border-b border-border/70 bg-muted/30 grid-dots">
+            <svg viewBox="0 0 480 320" className="absolute inset-0 h-full w-full p-4 opacity-85">
               {project.layers
                 .filter((l) => l.visible)
-                .slice(0, 4)
+                .slice(0, 5)
                 .map((layer) => (
                   <path
                     key={layer.id}
                     d={layer.pathData}
-                    fill="none"
+                    fill={layer.filled ? layer.color : "none"}
+                    fillOpacity={layer.filled ? 0.35 : undefined}
                     stroke={layer.color}
-                    strokeWidth="2.5"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     className="transition-opacity group-hover:opacity-100"
                   />

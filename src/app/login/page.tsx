@@ -68,12 +68,12 @@ export default function LoginPage() {
               className="grid gap-3"
             >
               {[
-                { icon: ScanLine, text: "Geometry + detail extraction modes" },
-                { icon: Layers, text: "Layered exports for design & CAD" },
+                { icon: ScanLine, text: "Path detail from Simple to Maximum" },
+                { icon: Layers, text: "Editable layers · SVG, DXF & more" },
               ].map((item) => (
                 <div
                   key={item.text}
-                  className="flex items-center gap-3 rounded-md border border-border bg-background/60 px-4 py-3"
+                  className="flex items-center gap-3 rounded-xl border border-border/80 bg-background/55 px-4 py-3 backdrop-blur-sm"
                 >
                   <item.icon className="h-4 w-4 text-primary" />
                   <span className="text-sm">{item.text}</span>

@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Play, PenTool } from "lucide-react";
+import { Play } from "lucide-react";
 import { toast } from "sonner";
 import { UploadDropzone } from "@/components/studio/upload-dropzone";
 import { AnalysisConfig } from "@/components/studio/analysis-config";
 import { ProcessingProgress } from "@/components/studio/processing-progress";
 import { Button } from "@/components/ui/button";
-import { runVectorizationPipeline } from "@/lib/vector-engine";
+import { runVectorizationPipeline, PATH_DETAIL_PRESETS } from "@/lib/vector-engine";
 import { useStudioStore } from "@/store/studio-store";
 import { useProjectStore } from "@/store/project-store";
 import type { Project } from "@/types";
@@ -19,6 +19,7 @@ export default function StudioPage() {
     images,
     batchIntent,
     modes,
+    pathDetail,
     isProcessing,
     setProcessing,
     setProgress,
@@ -42,6 +43,7 @@ export default function StudioPage() {
     try {
       const result = await runVectorizationPipeline({
         modes,
+        pathDetail,
         intent: batchIntent,
         sources: images.map((img) => ({
           id: img.id,
@@ -84,15 +86,14 @@ export default function StudioPage() {
         intent: batchIntent.trim() || undefined,
         width: result.width,
         height: result.height,
+        pathDetail,
       };
 
       setCanvasSize(result.width, result.height);
       setLayers(result.layers);
       upsertProject(project);
       toast.success(
-        images.length > 1
-          ? `Traced ${images.length} images · ${result.layers.length} layers`
-          : `Traced · ${result.layers.length} layers`
+        `Traced · ${result.layers.length} layers (${PATH_DETAIL_PRESETS[pathDetail].label})`
       );
       clearImages();
       router.push(`/studio/${projectId}`);
@@ -107,37 +108,41 @@ export default function StudioPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <div className="mx-auto max-w-7xl space-y-8 px-5 py-9 sm:px-8">
+      <div className="flex flex-col gap-5 border-b border-border/70 pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-2xl">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary"
+            className="text-[11px] font-medium uppercase tracking-[0.2em] text-primary"
           >
-            <PenTool className="h-3.5 w-3.5" />
-            The Studio
+            Studio
           </motion.p>
-          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            Bulk upload & process
+          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-[2.35rem] sm:leading-tight">
+            Trace images into vectors
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Drop any images and Rasm will trace them into real editable SVG layers in your
-            browser.
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Upload one or many files, set path detail, then export clean SVG layers. Use{" "}
+            <span className="text-foreground/80">Simple</span> for scenery and photos.
           </p>
         </div>
-        <Button onClick={startProcessing} disabled={isProcessing || !images.length} size="lg">
+        <Button
+          onClick={startProcessing}
+          disabled={isProcessing || !images.length}
+          size="lg"
+          className="min-w-[10.5rem] shadow-sm"
+        >
           <Play className="h-4 w-4" />
           {isProcessing
             ? "Tracing…"
             : images.length > 1
-              ? `Trace ${images.length} images`
-              : "Start vectorization"}
+              ? `Trace ${images.length}`
+              : "Trace image"}
         </Button>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+        <div className="space-y-5">
           <UploadDropzone />
           <ProcessingProgress />
         </div>

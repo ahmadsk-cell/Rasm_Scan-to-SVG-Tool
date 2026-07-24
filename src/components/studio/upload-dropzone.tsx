@@ -63,26 +63,26 @@ export function UploadDropzone() {
       <div
         {...getRootProps()}
         className={cn(
-          "relative cursor-pointer overflow-hidden rounded-xl border border-dashed px-6 py-10 text-center transition-all",
+          "relative cursor-pointer overflow-hidden rounded-2xl border border-dashed px-6 py-12 text-center transition-all",
           isDragActive
-            ? "border-primary bg-primary/10"
-            : "border-border bg-card/40 hover:border-primary/50 hover:bg-card/70"
+            ? "border-primary bg-primary/8"
+            : "border-border/90 bg-card/50 hover:border-primary/40 hover:bg-card/80"
         )}
       >
         <input {...getInputProps()} />
         <motion.div
-          animate={isDragActive ? { scale: 1.02 } : { scale: 1 }}
+          animate={isDragActive ? { scale: 1.015 } : { scale: 1 }}
           className="mx-auto flex max-w-md flex-col items-center"
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md border border-border bg-muted text-primary">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
             <ImagePlus className="h-5 w-5" />
           </div>
-          <p className="font-display text-lg font-semibold">
-            {isDragActive ? "Release to upload" : "Drop any images to vectorize"}
+          <p className="font-display text-lg font-semibold tracking-tight">
+            {isDragActive ? "Release to upload" : "Drop images to vectorize"}
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Logos, sketches, photos, icons, product shots — bulk upload supported. PNG, JPEG, or
-            WebP up to 25MB each.
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Logos, sketches, photos, icons — bulk upload supported. PNG, JPEG, or WebP up to
+            25MB each.
           </p>
         </motion.div>
       </div>
