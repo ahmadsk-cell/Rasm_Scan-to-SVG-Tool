@@ -23,7 +23,7 @@ export function AnalysisConfig() {
         </p>
         <h2 className="mt-1 font-display text-lg font-semibold tracking-tight">Trace setup</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Tune fidelity before you run — lower detail is faster on photos.
+          Product photos → Balanced. Scenery silhouettes → Simple. Mesh textures are softened automatically.
         </p>
       </div>
 
@@ -63,9 +63,14 @@ export function AnalysisConfig() {
           })}
         </div>
         <p className="text-xs leading-relaxed text-muted-foreground">{activePreset.hint}</p>
+        {pathDetail === "simple" && (
+          <p className="text-xs text-muted-foreground">
+            Simple favors outlines. For logos on products (e.g. a swoosh), use Balanced.
+          </p>
+        )}
         {pathDetail === "maximum" && (
           <p className="text-xs text-amber-600 dark:text-amber-400/90">
-            Maximum can be slow on scenic photos — try Simple or Balanced first.
+            Maximum can be slow on textured photos — try Balanced first.
           </p>
         )}
       </div>

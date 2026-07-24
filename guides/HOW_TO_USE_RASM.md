@@ -70,8 +70,9 @@ You don’t need a GitHub account for this demo login.
 Tips for better results:
 
 - Clear shapes and **higher contrast** work best.
-- Busy photos / scenery: use **Simple** or **Balanced** path detail.
-- Start with **Geometry** for cleaner silhouettes.
+- Product photos (shoes, packaging, logos on objects): use **Balanced** with Geometry + Internal detail.
+- Busy scenery: use **Simple**.
+- Knit / mesh textures are softened automatically so paths follow the silhouette and marks, not every stitch.
 
 ---
 

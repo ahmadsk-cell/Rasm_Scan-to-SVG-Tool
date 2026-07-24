@@ -34,7 +34,7 @@ export function SplitView({
         </div>
 
         <div
-          className="absolute inset-0 overflow-hidden bg-background/92"
+          className="absolute inset-0 overflow-hidden bg-white"
           style={{ clipPath: `inset(0 0 0 ${comparePosition}%)` }}
         >
           <div className="flex h-full w-full items-center justify-center p-2">

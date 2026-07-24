@@ -122,8 +122,9 @@ export default function StudioPage() {
             Trace images into vectors
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Upload one or many files, set path detail, then export clean SVG layers. Use{" "}
-            <span className="text-foreground/80">Simple</span> for scenery and photos.
+            Upload, set path detail, then export SVG layers. Use{" "}
+            <span className="text-foreground/80">Balanced</span> for product shots;{" "}
+            <span className="text-foreground/80">Simple</span> for scenery silhouettes.
           </p>
         </div>
         <Button

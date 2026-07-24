@@ -54,7 +54,7 @@ const initialMilestones: ProcessingMilestone[] = PROCESSING_STEPS.map((step) => 
 export const useStudioStore = create<StudioState>((set) => ({
   images: [],
   batchIntent: "",
-  modes: ["geometry"],
+  modes: ["geometry", "detail"],
   pathDetail: "balanced",
   isProcessing: false,
   progress: 0,

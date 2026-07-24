@@ -27,7 +27,7 @@ export function buildSvgFromLayers(
     .filter((l) => l.visible)
     .map((l) => {
       if (l.filled) {
-        return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="${l.color}" fill-opacity="0.88" stroke="${l.color}" stroke-width="0.4" stroke-linejoin="round"/>`;
+        return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="${l.color}" fill-opacity="1" stroke="${l.color}" stroke-width="0.35" stroke-linejoin="round"/>`;
       }
       return `<path id="${l.id}" data-name="${l.name}" d="${l.pathData}" fill="none" stroke="${l.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     })
