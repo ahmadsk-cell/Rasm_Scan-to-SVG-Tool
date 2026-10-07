@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const user = useAuthStore((s) => s.user);
 
   return (
+    <div className="h-full overflow-auto">
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6">
       <div>
         <h1 className="font-display text-3xl font-semibold tracking-tight">Settings</h1>
@@ -101,6 +102,7 @@ export default function SettingsPage() {
           </p>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

@@ -37,13 +37,11 @@ async function main() {
   await page.locator('input[type="file"]').setInputFiles(CLEAT);
   await page.waitForTimeout(600);
 
-  // Product shot defaults
   await page.getByRole("button", { name: "Balanced" }).click();
-  // Ensure internal detail is on so swoosh can survive
-  const detailSwitch = page.locator("#detail-mode");
-  if (await detailSwitch.count()) {
-    const checked = await detailSwitch.getAttribute("data-state");
-    if (checked !== "checked") await detailSwitch.click();
+  const bgSwitch = page.locator("#remove-bg");
+  if (await bgSwitch.count()) {
+    const checked = await bgSwitch.getAttribute("data-state");
+    if (checked !== "checked") await bgSwitch.click();
   }
 
   await page.getByRole("button", { name: /Trace/i }).first().click();
@@ -65,7 +63,7 @@ async function main() {
   await page.waitForTimeout(300);
 
   await page.screenshot({ path: OUT, fullPage: false });
-  const layerText = await page.locator("text=/editable layers/i").first().textContent();
+  const layerText = await page.locator("text=/\\d+ layers?/i").first().textContent();
   console.log(`Saved ${OUT}`);
   console.log(`Workspace: ${layerText}`);
   await browser.close();

@@ -1,59 +1,72 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { useStudioStore } from "@/store/studio-store";
+import { useProjectStore } from "@/store/project-store";
 import type { Project } from "@/types";
 import { SplitView } from "@/components/studio/split-view";
 import { LayerPanel } from "@/components/studio/layer-panel";
-import { VectorControls } from "@/components/studio/vector-controls";
 import { ExportModal } from "@/components/studio/export-modal";
-import { StatusBadge } from "@/components/dashboard/status-badge";
+import { Button } from "@/components/ui/button";
 
 export function WorkspaceEditor({ project }: { project: Project }) {
-  const { setLayers, setTuning, setActiveProjectId, layers, setCanvasSize } = useStudioStore();
+  const { setLayers, setTuning, setActiveProjectId, layers, setCanvasSize, activeProjectId } =
+    useStudioStore();
+  const upsertProject = useProjectStore((s) => s.upsertProject);
+  const projectRef = useRef(project);
+  const skipSync = useRef(true);
+  projectRef.current = project;
 
   useEffect(() => {
-    setActiveProjectId(project.id);
-    setLayers(project.layers);
-    setTuning(project.tuning);
-    setCanvasSize(project.width ?? 480, project.height ?? 320);
-  }, [project, setActiveProjectId, setLayers, setTuning, setCanvasSize]);
+    skipSync.current = true;
+    const current = projectRef.current;
+    setActiveProjectId(current.id);
+    setLayers(current.layers);
+    setTuning(current.tuning);
+    setCanvasSize(current.width ?? 480, current.height ?? 320);
+  }, [project.id, setActiveProjectId, setLayers, setTuning, setCanvasSize]);
+
+  useEffect(() => {
+    if (activeProjectId !== projectRef.current.id) return;
+    if (skipSync.current) {
+      skipSync.current = false;
+      return;
+    }
+    const current = projectRef.current;
+    upsertProject({
+      ...current,
+      layers,
+      updatedAt: new Date().toISOString(),
+    });
+  }, [layers, activeProjectId, upsertProject]);
 
   return (
-    <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 sm:px-8">
-      <div className="flex flex-col gap-4 border-b border-border/70 pb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
-          <div className="mb-2.5 flex flex-wrap items-center gap-2">
-            <StatusBadge status={project.status} />
-            {project.pathDetail && (
-              <span className="rounded-md border border-border/80 bg-muted/40 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                {project.pathDetail}
-              </span>
-            )}
-          </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-[2rem] sm:leading-tight">
-            {project.name}
-          </h1>
-          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-            {layers.length} editable layers
-            {project.intent ? ` · “${project.intent}”` : ""}
-          </p>
+    <div className="flex h-full min-h-0 flex-col">
+      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-border px-3">
+        <Button asChild variant="ghost" size="sm">
+          <Link href="/dashboard">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Library
+          </Link>
+        </Button>
+        <div className="h-4 w-px bg-border" />
+        <h1 className="min-w-0 truncate text-sm font-medium">{project.name}</h1>
+        <span className="hidden text-xs text-muted-foreground sm:inline">
+          {layers.length} layer{layers.length === 1 ? "" : "s"}
+          {project.pathDetail ? ` · ${project.pathDetail}` : ""}
+        </span>
+        <div className="ml-auto">
+          <ExportModal width={project.width} height={project.height} />
         </div>
-        <ExportModal width={project.width} height={project.height} />
-      </div>
+      </header>
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_300px]">
-        <SplitView
-          imageUrl={project.imageUrl}
-          width={project.width}
-          height={project.height}
-        />
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1 xl:content-start">
-          <div className="min-h-[320px]">
-            <LayerPanel />
-          </div>
-          <VectorControls />
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        <div className="min-h-0 min-w-0 flex-1">
+          <SplitView imageUrl={project.imageUrl} width={project.width} height={project.height} />
         </div>
+        <LayerPanel />
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ interface StudioState {
   batchIntent: string;
   modes: AnalysisMode[];
   pathDetail: PathDetailLevel;
+  removeBackground: boolean;
   isProcessing: boolean;
   progress: number;
   milestones: ProcessingMilestone[];
@@ -33,6 +34,7 @@ interface StudioState {
   setBatchIntent: (intent: string) => void;
   toggleMode: (mode: AnalysisMode) => void;
   setPathDetail: (level: PathDetailLevel) => void;
+  setRemoveBackground: (value: boolean) => void;
   setProcessing: (value: boolean) => void;
   setProgress: (value: number) => void;
   setMilestones: (milestones: ProcessingMilestone[]) => void;
@@ -56,6 +58,7 @@ export const useStudioStore = create<StudioState>((set) => ({
   batchIntent: "",
   modes: ["geometry", "detail"],
   pathDetail: "balanced",
+  removeBackground: true,
   isProcessing: false,
   progress: 0,
   milestones: initialMilestones,
@@ -82,7 +85,13 @@ export const useStudioStore = create<StudioState>((set) => ({
       images: state.images.map((img) => (img.id === id ? { ...img, ...patch } : img)),
     })),
 
-  clearImages: () => set({ images: [], batchIntent: "" }),
+  clearImages: () =>
+    set((state) => {
+      for (const image of state.images) {
+        if (image.previewUrl.startsWith("blob:")) URL.revokeObjectURL(image.previewUrl);
+      }
+      return { images: [], batchIntent: "" };
+    }),
 
   setBatchIntent: (intent) => set({ batchIntent: intent }),
 
@@ -98,6 +107,7 @@ export const useStudioStore = create<StudioState>((set) => ({
     }),
 
   setPathDetail: (level) => set({ pathDetail: level }),
+  setRemoveBackground: (value) => set({ removeBackground: value }),
 
   setProcessing: (value) => set({ isProcessing: value }),
   setProgress: (value) => set({ progress: value }),

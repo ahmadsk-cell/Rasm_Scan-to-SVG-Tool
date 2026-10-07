@@ -69,25 +69,20 @@ You don’t need a GitHub account for this demo login.
 
 Tips for better results:
 
-- Clear shapes and **higher contrast** work best.
-- Product photos (shoes, packaging, logos on objects): use **Balanced** with Geometry + Internal detail.
+- Product photos on white: leave **Cut background** on and use **Balanced**.
 - Busy scenery: use **Simple**.
-- Knit / mesh textures are softened automatically so paths follow the silhouette and marks, not every stitch.
+- **Detailed** and **Maximum** keep more color regions and take longer.
 
 ---
 
-## Step 4 — Set path detail & describe what you want
+## Step 4 — Set path detail
 
 1. On the right under **Path detail**, pick how fine the tracing should be:
-   - **Simple** — fastest; best for photos and scenery  
-   - **Balanced** — good default for most images  
-   - **Detailed / Maximum** — more shapes (slower)
-2. Optionally toggle **Geometry** (silhouettes) and **Internal detail**.
-3. In **What are you looking for?**, type a short note for the batch if you want.  
-   Example: `Clean outer silhouette and logo mark`
-4. For each image, you can refine **Extract from this image**.
-
-Notes help label layers. Tracing itself is classical vectorization (not ChatGPT-style AI).
+   - **Simple** — few smooth shapes  
+   - **Balanced** — default for product photos  
+   - **Detailed / Maximum** — more regions (slower)
+2. **Cut background** removes the white backdrop and the soft floor shadow. Turn it off only if the background is part of the artwork.
+3. **Project name** is optional. If you leave it blank, Rasm uses the file name.
 
 ---
 
@@ -103,11 +98,10 @@ Notes help label layers. Tracing itself is classical vectorization (not ChatGPT-
 
 In the workspace you’ll see:
 
-- **Left / compare slider** — original picture vs vector  
-- **Layers** — turn paths on/off, rename them, lock them  
-- **Vector tuning** — preview aids (more advanced re-trace options can come later)
+- **Compare slider** — original picture vs vector, lined up on the same frame  
+- **Layers** — named by color (Red, Gold, Black). Hide, rename, or lock them
 
-Drag the compare slider to check how close the vector matches your image.
+Drag the compare slider to check the trace against the photo.
 
 ---
 

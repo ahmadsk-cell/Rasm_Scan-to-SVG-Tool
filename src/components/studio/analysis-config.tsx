@@ -1,138 +1,64 @@
 "use client";
 
-import { Box, ScanSearch, Gauge } from "lucide-react";
 import { useStudioStore } from "@/store/studio-store";
 import { PATH_DETAIL_PRESETS } from "@/lib/trace-image";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { PathDetailLevel } from "@/types";
 
 const DETAIL_ORDER: PathDetailLevel[] = ["simple", "balanced", "detailed", "maximum"];
 
 export function AnalysisConfig() {
-  const { modes, toggleMode, pathDetail, setPathDetail } = useStudioStore();
+  const { pathDetail, setPathDetail, removeBackground, setRemoveBackground } = useStudioStore();
   const activePreset = PATH_DETAIL_PRESETS[pathDetail];
 
   return (
-    <aside className="space-y-5 rounded-2xl border border-border/80 bg-card/80 p-5 shadow-sm backdrop-blur-sm">
-      <div>
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-          Controls
-        </p>
-        <h2 className="mt-1 font-display text-lg font-semibold tracking-tight">Trace setup</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Product photos → Balanced. Scenery silhouettes → Simple. Mesh textures are softened automatically.
-        </p>
+    <aside className="flex w-full shrink-0 flex-col border-t border-border bg-card lg:w-72 lg:border-l lg:border-t-0">
+      <div className="flex h-11 items-center border-b border-border px-4">
+        <p className="panel-label">Develop</p>
       </div>
 
-      <Separator />
-
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Gauge className="h-4 w-4 text-primary" />
-          <Label className="text-sm font-semibold">Path detail</Label>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {DETAIL_ORDER.map((level) => {
-            const preset = PATH_DETAIL_PRESETS[level];
-            const active = pathDetail === level;
-            return (
-              <button
-                key={level}
-                type="button"
-                onClick={() => setPathDetail(level)}
-                className={cn(
-                  "rounded-xl border px-3 py-2.5 text-left transition-all",
-                  active
-                    ? "border-primary/50 bg-primary/10 shadow-sm"
-                    : "border-border/80 bg-muted/20 hover:border-border hover:bg-muted/40"
-                )}
-              >
-                <p
+      <div className="space-y-5 p-4">
+        <div className="space-y-2">
+          <Label className="text-xs text-muted-foreground">Path detail</Label>
+          <div className="grid grid-cols-2 gap-1">
+            {DETAIL_ORDER.map((level) => {
+              const preset = PATH_DETAIL_PRESETS[level];
+              const active = pathDetail === level;
+              return (
+                <button
+                  key={level}
+                  type="button"
+                  onClick={() => setPathDetail(level)}
                   className={cn(
-                    "text-sm font-medium",
-                    active ? "text-foreground" : "text-muted-foreground"
+                    "h-8 rounded-md px-2 text-left text-xs transition-colors",
+                    active
+                      ? "bg-secondary text-foreground"
+                      : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
                   )}
                 >
                   {preset.label}
-                </p>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-[11px] leading-relaxed text-muted-foreground">{activePreset.hint}</p>
         </div>
-        <p className="text-xs leading-relaxed text-muted-foreground">{activePreset.hint}</p>
-        {pathDetail === "simple" && (
-          <p className="text-xs text-muted-foreground">
-            Simple favors outlines. For logos on products (e.g. a swoosh), use Balanced.
-          </p>
-        )}
-        {pathDetail === "maximum" && (
-          <p className="text-xs text-amber-600 dark:text-amber-400/90">
-            Maximum can be slow on textured photos — try Balanced first.
-          </p>
-        )}
-      </div>
 
-      <Separator />
-
-      <div
-        className={cn(
-          "rounded-xl border p-4 transition-colors",
-          modes.includes("geometry")
-            ? "border-primary/35 bg-primary/5"
-            : "border-border/80 bg-muted/15"
-        )}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex gap-3">
-            <div className="mt-0.5 rounded-lg bg-background/80 p-2 text-primary ring-1 ring-border/60">
-              <Box className="h-4 w-4" />
-            </div>
-            <div>
-              <Label htmlFor="geometry-mode" className="text-sm font-semibold">
-                Geometry
-              </Label>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Prefer outer silhouettes and fewer color regions.
-              </p>
-            </div>
+        <div className="flex items-center justify-between gap-3 border-t border-border pt-4">
+          <div>
+            <Label htmlFor="remove-bg" className="text-xs">
+              Cut background
+            </Label>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              White backdrop and floor shadow.
+            </p>
           </div>
           <Switch
-            id="geometry-mode"
-            checked={modes.includes("geometry")}
-            onCheckedChange={() => toggleMode("geometry")}
-          />
-        </div>
-      </div>
-
-      <div
-        className={cn(
-          "rounded-xl border p-4 transition-colors",
-          modes.includes("detail")
-            ? "border-primary/35 bg-primary/5"
-            : "border-border/80 bg-muted/15"
-        )}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex gap-3">
-            <div className="mt-0.5 rounded-lg bg-background/80 p-2 text-primary ring-1 ring-border/60">
-              <ScanSearch className="h-4 w-4" />
-            </div>
-            <div>
-              <Label htmlFor="detail-mode" className="text-sm font-semibold">
-                Internal detail
-              </Label>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Keep more interior shapes and color breaks.
-              </p>
-            </div>
-          </div>
-          <Switch
-            id="detail-mode"
-            checked={modes.includes("detail")}
-            onCheckedChange={() => toggleMode("detail")}
+            id="remove-bg"
+            checked={removeBackground}
+            onCheckedChange={setRemoveBackground}
           />
         </div>
       </div>

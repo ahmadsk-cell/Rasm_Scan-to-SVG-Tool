@@ -33,15 +33,7 @@ export default function ProjectWorkspacePage({
   }
 
   return (
-    <div>
-      <div className="border-b border-border px-4 py-3 sm:px-6 lg:px-8">
-        <Button asChild variant="ghost" size="sm">
-          <Link href="/dashboard">
-            <ArrowLeft className="h-4 w-4" />
-            Dashboard
-          </Link>
-        </Button>
-      </div>
+    <div className="h-full min-h-0">
       <WorkspaceEditor project={project} />
     </div>
   );

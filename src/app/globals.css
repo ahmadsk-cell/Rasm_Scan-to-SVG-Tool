@@ -30,65 +30,68 @@
   --font-sans: var(--font-space), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --color-stage: var(--stage);
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
 }
 
 :root {
-  --radius: 0.65rem;
-  --background: #eef0f2;
-  --foreground: #171a1f;
-  --card: #f8f9fa;
-  --card-foreground: #171a1f;
-  --popover: #f8f9fa;
-  --popover-foreground: #171a1f;
-  --primary: #5a7560;
-  --primary-foreground: #f3f6f3;
-  --secondary: #e2e6eb;
-  --secondary-foreground: #171a1f;
-  --muted: #e6e9ed;
-  --muted-foreground: #5a6370;
-  --accent: #d9e2db;
-  --accent-foreground: #33443a;
+  --radius: 4px;
+  --background: #ececec;
+  --foreground: #1a1a1a;
+  --card: #f6f6f6;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #3d5344;
+  --primary-foreground: #f4f7f4;
+  --secondary: #e3e3e3;
+  --secondary-foreground: #1a1a1a;
+  --muted: #e4e4e4;
+  --muted-foreground: #5c5c5c;
+  --accent: #e7eee8;
+  --accent-foreground: #243028;
   --destructive: #b54a4a;
-  --border: #cdd3db;
-  --input: #cdd3db;
-  --ring: #5a7560;
-  --success: #5a7560;
+  --border: #d0d0d0;
+  --input: #d0d0d0;
+  --ring: #3d5344;
+  --success: #3d5344;
   --warning: #a67c3a;
-  --sidebar: #e8ebef;
-  --sidebar-foreground: #171a1f;
-  --sidebar-border: #d0d5dc;
-  --sidebar-accent: #d7e0d9;
+  --sidebar: #f3f3f3;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-border: #d4d4d4;
+  --sidebar-accent: #e6e6e6;
+  --stage: #c2c2c2;
 }
 
 .dark {
-  --background: #121416;
-  --foreground: #e6e8eb;
-  --card: #1b1e22;
-  --card-foreground: #e6e8eb;
-  --popover: #22262b;
-  --popover-foreground: #e6e8eb;
-  --primary: #8fae8b;
-  --primary-foreground: #121614;
-  --secondary: #262a30;
-  --secondary-foreground: #e6e8eb;
-  --muted: #22262b;
-  --muted-foreground: #939aa3;
-  --accent: #243028;
-  --accent-foreground: #b4cbb0;
-  --destructive: #c07070;
-  --border: #2f343b;
-  --input: #2f343b;
-  --ring: #8fae8b;
-  --success: #8fae8b;
+  --background: #1e1e1e;
+  --foreground: #e8e8e8;
+  --card: #262626;
+  --card-foreground: #e8e8e8;
+  --popover: #2c2c2c;
+  --popover-foreground: #e8e8e8;
+  --primary: #b7cbb4;
+  --primary-foreground: #1a1c19;
+  --secondary: #323232;
+  --secondary-foreground: #e8e8e8;
+  --muted: #2a2a2a;
+  --muted-foreground: #9b9b9b;
+  --accent: #2e3830;
+  --accent-foreground: #d5e3d2;
+  --destructive: #d08080;
+  --border: #3a3a3a;
+  --input: #3a3a3a;
+  --ring: #b7cbb4;
+  --success: #b7cbb4;
   --warning: #c4a06a;
-  --sidebar: #0e1012;
-  --sidebar-foreground: #e6e8eb;
-  --sidebar-border: #25292e;
-  --sidebar-accent: #1c241f;
+  --sidebar: #161616;
+  --sidebar-foreground: #e8e8e8;
+  --sidebar-border: #2a2a2a;
+  --sidebar-accent: #2a2a2a;
+  --stage: #141414;
 }
 
 @layer base {
@@ -103,27 +106,20 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 100% -5%, rgba(90, 117, 96, 0.08), transparent 50%),
-      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(122, 146, 168, 0.06), transparent 45%),
-      linear-gradient(180deg, #eef0f2 0%, #e8ebef 100%);
-  }
-
-  .dark body {
-    background-image:
-      radial-gradient(ellipse 90% 55% at 0% -10%, rgba(143, 174, 139, 0.08), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 100% 80%, rgba(122, 146, 168, 0.04), transparent 50%),
-      linear-gradient(180deg, #121416 0%, #0f1113 100%);
   }
 }
 
 @layer utilities {
   .glass {
-    @apply border border-border/70 bg-card/75 shadow-sm backdrop-blur-xl;
+    @apply border border-border bg-card;
   }
 
   .glass-panel {
-    @apply border border-border/80 bg-card/85 shadow-sm backdrop-blur-xl;
+    @apply border border-border bg-card;
+  }
+
+  .panel-label {
+    @apply text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground;
   }
 
   .text-gradient {

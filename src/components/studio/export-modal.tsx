@@ -96,7 +96,11 @@ export function ExportModal({
         );
         break;
       case "dxf":
-        downloadBlob("rasm-export.dxf", exportAsDxf(tuned), "application/dxf");
+        downloadBlob(
+          "rasm-export.dxf",
+          exportAsDxf(tuned, exportHeight),
+          "application/dxf"
+        );
         break;
       case "json":
         downloadBlob(

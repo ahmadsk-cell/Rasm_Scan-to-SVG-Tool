@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, Layers, ScanLine } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,62 +31,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative grid min-h-screen lg:grid-cols-2">
-      <div className="absolute right-4 top-4 z-20">
+    <div className="relative grid min-h-screen bg-background lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="absolute right-3 top-3 z-20">
         <ThemeToggle />
       </div>
 
-      <section className="relative hidden overflow-hidden border-r border-border bg-card lg:flex">
-        <div className="absolute inset-0 grid-dots opacity-60" />
-        <div className="relative z-10 flex flex-col justify-between p-12">
-          <div className="flex items-center gap-3">
-            <BrandLogo size={52} withWordmark wordmarkClassName="[&_p:first-child]:text-xl" />
-          </div>
-
-          <div className="max-w-lg space-y-6">
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="font-display text-5xl font-semibold leading-[1.05] tracking-tight"
-            >
-              Trace any image into precise SVG layers.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-lg text-muted-foreground"
-            >
-              Turn photos, sketches, logos, and icons into editable vector paths for design, print,
-              and production.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="grid gap-3"
-            >
-              {[
-                { icon: ScanLine, text: "Path detail from Simple to Maximum" },
-                { icon: Layers, text: "Editable layers · SVG, DXF & more" },
-              ].map((item) => (
-                <div
-                  key={item.text}
-                  className="flex items-center gap-3 rounded-xl border border-border/80 bg-background/55 px-4 py-3 backdrop-blur-sm"
-                >
-                  <item.icon className="h-4 w-4 text-primary" />
-                  <span className="text-sm">{item.text}</span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          <BuiltBy showLogo />
+      <section className="relative hidden flex-col justify-between bg-stage p-10 lg:flex">
+        <BrandLogo size={36} withWordmark />
+        <div className="max-w-md">
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-display text-4xl font-medium leading-tight tracking-tight text-foreground"
+          >
+            Trace an image into editable paths.
+          </motion.h1>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Layers, compare, and export. The picture stays in the center.
+          </p>
         </div>
+        <BuiltBy showLogo />
       </section>
 
-      <section className="flex items-center justify-center p-6 sm:p-10">
+      <section className="flex items-center justify-center bg-card p-6 sm:p-10">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -97,7 +64,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <h2 className="font-display text-3xl font-semibold tracking-tight">Welcome back</h2>
+            <h2 className="font-display text-2xl font-medium tracking-tight">Sign in</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Sign in to your image-to-vector workspace.
             </p>
